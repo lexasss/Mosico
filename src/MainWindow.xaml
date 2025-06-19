@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:local="clr-namespace:Mosico"
         mc:Ignorable="d"
+        Name="AppWindow"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         AllowsTransparency="True"
         Background="Transparent"
         IsHitTestVisible="False"
@@ -14,11 +17,52 @@
         WindowState="Maximized"
         Title="Mosico"
         Icon="/Assets/Images/icon.png"
+        ShowInTaskbar="False"
         Height="800"
         Width="800"
         Loaded="Window_Loaded"
         Closed="Window_Closed">
 
-    <UniformGrid x:Name="ugdContainer"/>
+    <Window.Resources>
+    </Window.Resources>
+    
+    <UniformGrid x:Name="ugdContainer">
+        
+        <!-- Grid is populated in the code -->
+        
+        <tb:TaskbarIcon x:Name="trbNotifyIcon"
+                        Visibility="Visible"
+                        ToolTipText="Mosico app"
+                        IconSource="/Assets/Images/icon.png"
+                        MenuActivation="LeftOrRightClick"
+                        PopupActivation="DoubleClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Settings..."
+                              Click="SettingsMenuItem_Click"/>
+                    <MenuItem Header="_Exit"
+                              Click="ExitMenuItem_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+            <tb:TaskbarIcon.TrayPopup>
+                <Popup>
+                    <StackPanel Background="AliceBlue">
+                        <Label Padding="12"
+                               Content="Mosico application"
+                               MouseDoubleClick="TrayPopup_MouseDoubleClick"/>
+                    </StackPanel>
+                </Popup>
+            </tb:TaskbarIcon.TrayPopup>
+            <tb:TaskbarIcon.TrayToolTip>
+                <Label Background="White"
+                       BorderBrush="Gray"
+                       BorderThickness="1"
+                       UseLayoutRounding="True"
+                       Padding="4"
+                       Content="Mosico">
+                </Label>
+            </tb:TaskbarIcon.TrayToolTip>
+        </tb:TaskbarIcon>
+    </UniformGrid>
 
 </Window>

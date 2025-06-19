@@ -16,16 +16,6 @@ public partial class MainWindow : Window
         _cellProperies = new CellProperties(_telemetryService);
 
         _settings.Updated += Settings_Updated;
-
-        Task.Run(async () =>
-        {
-            await Task.Delay(3000);
-            Dispatcher.Invoke(() =>
-            {
-                var dialog = new SettingsDialog();
-                dialog.ShowDialog();
-            });
-        });
     }
 
     // Internal
@@ -97,5 +87,21 @@ public partial class MainWindow : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         _telemetryService.Dispose();
+    }
+
+    private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SettingsDialog();
+        dialog.ShowDialog();
+    }
+
+    private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void TrayPopup_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        trbNotifyIcon.CloseTrayPopup();
     }
 }

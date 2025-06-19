@@ -8,27 +8,8 @@ public class Settings
 
     public SolidColorBrush CellColor
     {
-        get
-        {
-            var num = Get<uint>(nameof(CellColor));
-            byte[] bytes = new byte[4];
-            for (int i = 0; i < 4; i++)
-            {
-                bytes[i] = (byte)(num & 0xFF);
-                num >>= 8;
-            }
-            var color = Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
-            return new SolidColorBrush(color);
-        }
-        set
-        {
-            uint num = value.Color.A;
-            num = (num << 8) | value.Color.R;
-            num = (num << 8) | value.Color.G;
-            num = (num << 8) | value.Color.B;
-
-            Save(nameof(CellColor), num);
-        }
+        get => new(IntToColor(Get<uint>(nameof(CellColor))));
+        set => Save(nameof(CellColor), ColorToInt(value.Color));
     }
 
     public double CellSize
@@ -164,5 +145,25 @@ public class Settings
                 _cache.Add(prop, value);
             }
         }
+    }
+
+    private static Color IntToColor(uint value)
+    {
+        byte[] bytes = new byte[4];
+        for (int i = 0; i < 4; i++)
+        {
+            bytes[i] = (byte)(value & 0xFF);
+            value >>= 8;
+        }
+        return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
+    }
+
+    private static uint ColorToInt(Color color)
+    {
+        uint result = color.A;
+        result = (result << 8) | color.R;
+        result = (result << 8) | color.G;
+        result = (result << 8) | color.B;
+        return result;
     }
 }
