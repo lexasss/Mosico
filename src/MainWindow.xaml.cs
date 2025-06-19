@@ -1,5 +1,6 @@
 ﻿using Mosico.Definitions;
 using Mosico.ViewModels;
+using Mosico.Views;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -15,6 +16,16 @@ public partial class MainWindow : Window
         _cellProperies = new CellProperties(_telemetryService);
 
         _settings.Updated += Settings_Updated;
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(3000);
+            Dispatcher.Invoke(() =>
+            {
+                var dialog = new SettingsDialog();
+                dialog.ShowDialog();
+            });
+        });
     }
 
     // Internal

@@ -3,22 +3,64 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Mosico.Views"
+        xmlns:defs="clr-namespace:Mosico.Definitions"
+        xmlns:services="clr-namespace:Mosico.Services"
         mc:Ignorable="d"
         DataContext="{Binding Path=Settings, RelativeSource={RelativeSource Self}}"
-        Title="Settings"
-        Height="420" Width="200">
+        Title="Mosico settings"
+        Height="550"
+        Width="200"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        Icon="/Assets/Images/icon.png"
+        WindowStartupLocation="CenterScreen">
+    
     <Window.Resources>
-        <Style TargetType="Button">
+        <defs:BrushToColorConverter x:Key="brush2color"/>
+        
+        <Style x:Key="Dialog" TargetType="Button">
             <Setter Property="Padding" Value="8"/>
             <Setter Property="Margin" Value="8,4"/>
             <Setter Property="MinWidth" Value="74"/>
         </Style>
         <Style x:Key="Section" TargetType="Label">
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="2,8,2,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8,8,2,4"/>
+            <Setter Property="BorderThickness" Value="0,1,0,0"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
         </Style>
+        <Style TargetType="xctk:ColorPicker">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="6,2"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Width" Value="48"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="6,2"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Width" Value="48"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="6,2"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ObjectDataProvider x:Key="TelemetryFields" MethodName="get_FieldNames"
+                            ObjectType="{x:Type services:TelemetryService}">
+        </ObjectDataProvider>
     </Window.Resources>
     
     <Grid>
@@ -42,10 +84,12 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="64"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.ColumnSpan="2"
@@ -53,32 +97,55 @@
                    Content="General"/>
             <Label Grid.Row="1" Grid.Column="0">Cell size, px</Label>
             <TextBox Grid.Row="1" Grid.Column="1"
-                     Text="{Binding CellSize}"/>
+                     Text="{Binding CellSize, Mode=TwoWay}"/>
             <Label Grid.Row="2" Grid.Column="0">Circle size, px</Label>
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     Text="{Binding CircleSize, Mode=TwoWay}"/>
             <Label Grid.Row="3" Grid.Column="0">Color</Label>
+            <xctk:ColorPicker Grid.Row="3" Grid.Column="1"
+                              SelectedColor="{Binding CellColor, Mode=TwoWay, Converter={StaticResource brush2color}}"/>
 
             <Label Grid.Row="4" Grid.ColumnSpan="2"
                    Style="{StaticResource Section}"
                    Content="Size binding"/>
             <Label Grid.Row="5" Grid.Column="0">Telemetry field</Label>
-            <Label Grid.Row="6" Grid.Column="0">Scale</Label>
-            <Label Grid.Row="7" Grid.Column="0">Max size, px</Label>
-            <Label Grid.Row="8" Grid.Column="0">Damping rate</Label>
+            <ComboBox Grid.Row="6" Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Source={StaticResource TelemetryFields}}"
+                      SelectedItem="{Binding BindSizeField}"/>
+            <Label Grid.Row="7" Grid.Column="0">Scale</Label>
+            <TextBox Grid.Row="7" Grid.Column="1"
+                     Text="{Binding BindSizeScale, Mode=TwoWay}"/>
+            <Label Grid.Row="8" Grid.Column="0">Max size, px</Label>
+            <TextBox Grid.Row="8" Grid.Column="1"
+                     Text="{Binding BindSizeMax, Mode=TwoWay}"/>
+            <Label Grid.Row="9" Grid.Column="0">Damping rate</Label>
+            <TextBox Grid.Row="9" Grid.Column="1"
+                     Text="{Binding BindSizeDamp, Mode=TwoWay}"/>
 
-            <Label Grid.Row="9" Grid.ColumnSpan="2"
+            <Label Grid.Row="10" Grid.ColumnSpan="2"
                    Style="{StaticResource Section}"
                    Content="Offset binding"/>
-            <Label Grid.Row="10" Grid.Column="0">Telemetry field</Label>
-            <Label Grid.Row="11" Grid.Column="0">Scale</Label>
-            <Label Grid.Row="12" Grid.Column="0">Damping rate</Label>
+            <Label Grid.Row="11" Grid.Column="0">Telemetry field</Label>
+            <ComboBox Grid.Row="12" Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Source={StaticResource TelemetryFields}}"
+                      SelectedItem="{Binding BindOffsetField}"/>
+            <Label Grid.Row="13" Grid.Column="0">Scale</Label>
+            <TextBox Grid.Row="13" Grid.Column="1"
+                     Text="{Binding BindOffsetScale, Mode=TwoWay}"/>
+            <Label Grid.Row="14" Grid.Column="0">Damping rate</Label>
+            <TextBox Grid.Row="14" Grid.Column="1"
+                     Text="{Binding BindOffsetDamp, Mode=TwoWay}"/>
         </Grid>
 
         <WrapPanel Grid.Row="1"
+                   Margin="0,12,0,4"
                    HorizontalAlignment="Center">
-            <Button Content="Save"
+            <Button Style="{StaticResource Dialog}"
+                    Content="Save"
                     IsDefault="True"
                     Click="OK_Click"/>
-            <Button Content="Cancel"
+            <Button Style="{StaticResource Dialog}"
+                    Content="Cancel"
                     IsCancel="True"/>
         </WrapPanel>
     </Grid>

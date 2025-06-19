@@ -12,8 +12,10 @@
         Topmost="True"
         ResizeMode="NoResize"
         WindowState="Maximized"
-        Title="Transparent window"
-        Height="800" Width="800"
+        Title="Mosico"
+        Icon="/Assets/Images/icon.png"
+        Height="800"
+        Width="800"
         Loaded="Window_Loaded"
         Closed="Window_Closed">
 

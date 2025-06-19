@@ -7,10 +7,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
+    <ApplicationIcon>Assets\Images\icon.ico</ApplicationIcon>
+    <Authors>Oleg Spakov</Authors>
+    <Company>Tampere University</Company>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/lexasss/mosico/releases/</PackageProjectUrl>
+    <Copyright>Oleg Spakov @ 2025</Copyright>
+    <RepositoryUrl>https://github.com/lexasss/mosico/</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Images\icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <Content Include="Assets\Images\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>

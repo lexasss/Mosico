@@ -5,7 +5,7 @@ namespace Mosico.Views;
 
 public partial class SettingsDialog : Window
 {
-    public Settings Settings => Settings.Instance;
+    public Settings Settings { get; } = new Settings();
 
     public SettingsDialog()
     {
@@ -17,5 +17,6 @@ public partial class SettingsDialog : Window
     private void OK_Click(object sender, RoutedEventArgs e)
     {
         Settings.Save();
+        Close();
     }
 }
