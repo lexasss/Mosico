@@ -1,22 +1,25 @@
-﻿using System.Windows.Media;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.ComponentModel;
+using System.Windows.Media;
 
 namespace Mosico.Views;
 
-public partial class Cell : UserControl, INotifyPropertyChanged
+public partial class Cell : UserControl
 {
-    public Brush MainBrush
-    {
-        get => field;
-        set
-        {
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MainBrush)));
-        }
-    } = Brushes.HotPink;
+    public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
+        name: "Color",
+        propertyType: typeof(Brush),
+        ownerType: typeof(Cell),
+        typeMetadata: new FrameworkPropertyMetadata(
+            defaultValue: Brushes.HotPink,
+            flags: FrameworkPropertyMetadataOptions.AffectsRender)
+    );
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public Brush Color
+    {
+        get => (Brush)GetValue(ColorProperty);
+        set => SetValue(ColorProperty, value);
+    }
 
     public Cell()
     {

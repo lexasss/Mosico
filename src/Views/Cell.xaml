@@ -9,5 +9,5 @@
              HorizontalAlignment="Center"
              VerticalAlignment="Center"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Ellipse Fill="{Binding MainBrush}"/>
+    <Ellipse Fill="{Binding Color}"/>
 </UserControl>

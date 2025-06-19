@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Mosico.Definitions;
+using Mosico.ViewModels;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -10,31 +12,28 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        _cellProperies = new ViewModel.CellProperties(_telemetryService);
+        _cellProperies = new CellProperties(_telemetryService);
+
+        _settings.Updated += Settings_Updated;
     }
 
     // Internal
 
-    const int CELL_SIZE = 300;  // px
-
     readonly Services.TelemetryService _telemetryService = new();
-    readonly ViewModel.CellProperties _cellProperies;
+    readonly CellProperties _cellProperies;
+    readonly Settings _settings = Settings.Instance;
 
-    protected override void OnSourceInitialized(EventArgs e)
+    private void CreateGrid()
     {
-        base.OnSourceInitialized(e);
+        ugdContainer.Children.Clear();
 
-        Services.WindowsServices.SetWindowTransparent(this);
-    }
+        var sizeBinding = new Binding(nameof(CellProperties.Size)) { Source = _cellProperies };
+        var xOffsetBinding = new Binding(nameof(CellProperties.OffsetX)) { Source = _cellProperies };
+        var yOffsetBinding = new Binding(nameof(CellProperties.OffsetY)) { Source = _cellProperies };
+        var colorBinding = new Binding(nameof(CellProperties.Color)) { Source = _cellProperies };
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        var sizeBinding = new Binding("Size") { Source = _cellProperies };
-        var xOffsetBinding = new Binding("OffsetX") { Source = _cellProperies };
-        var yOffsetBinding = new Binding("OffsetY") { Source = _cellProperies };
-
-        int rows = (int)(ActualHeight / CELL_SIZE);
-        int columns = (int)(ActualWidth / CELL_SIZE);
+        int rows = (int)(ActualHeight / _settings.CellSize);
+        int columns = (int)(ActualWidth / _settings.CellSize);
 
         ugdContainer.Rows = rows > 0 ? rows : 1;
         ugdContainer.Columns = columns > 0 ? columns : 1;
@@ -57,10 +56,31 @@ public partial class MainWindow : Window
 
                 BindingOperations.SetBinding(cell, WidthProperty, sizeBinding);
                 BindingOperations.SetBinding(cell, HeightProperty, sizeBinding);
-                
+                BindingOperations.SetBinding(cell, Views.Cell.ColorProperty, colorBinding);
+
                 ugdContainer.Children.Add(cell);
             }
         }
+    }
+
+    private void Settings_Updated(object? sender, string propName)
+    {
+        if (propName == nameof(Settings.CellSize))
+        {
+            CreateGrid();
+        }
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        Services.WindowsServices.SetWindowTransparent(this);
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        CreateGrid();
     }
 
     private void Window_Closed(object sender, EventArgs e)

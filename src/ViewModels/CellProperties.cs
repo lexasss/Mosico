@@ -1,10 +1,22 @@
-﻿using Mosico.Services;
+﻿using Mosico.Definitions;
+using Mosico.Services;
 using System.ComponentModel;
+using System.Windows.Media;
 
-namespace Mosico.ViewModel;
+namespace Mosico.ViewModels;
 
 internal class CellProperties : INotifyPropertyChanged
 {
+    public SolidColorBrush Color
+    {
+        get => _settings.CellColor;
+        set
+        {
+            _settings.CellColor = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
+        }
+    }
+
     public double Size
     {
         get => field;
@@ -13,7 +25,7 @@ internal class CellProperties : INotifyPropertyChanged
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Size)));
         }
-    } = DefaultSize;
+    }
 
     public double OffsetX
     {
@@ -40,27 +52,20 @@ internal class CellProperties : INotifyPropertyChanged
     public CellProperties(TelemetryService telemetryService)
     {
         telemetryService.TelemetryReceived += OnTelemetryReceived;
+        _settings.Updated += Settings_Updated;
+
+        Size = _settings.CircleSize;
     }
 
     // Internal
 
-    const double MotionDamping_Longitudinal = 0.3;
-    const double MotionDamping_Lateral = 0.2;
+    //static double SizeAtCriticalBrakeForce = Math.Exp(-GForceToSize_Scale * GForceToSize_CriticalLongitudinalForce);
 
-    const double DefaultSize = 40;
-
-    const double GForceToSize_Scale = 0.7;
-    const double GForceToSize_CriticalLongitudinalForce = -2.5;
-    const double GForceToSize_CriticalLongitudinalForceSteepness = 5;
-
-    const double GForceToOffset_Scale = 50;
-
-    static double SizeAtCriticalBrakeForce = Math.Exp(-GForceToSize_Scale * GForceToSize_CriticalLongitudinalForce);
-
+    readonly Settings _settings = Settings.Instance;
 
     private void OnTelemetryReceived(object? sender, Dictionary<string, float> e)
     {
-        if (e.TryGetValue("gforce_longitudinal", out var gforceLongitudinal))
+        if (e.TryGetValue(_settings.BindSizeField, out var telemetryValueForSize))
         {
             // The idea is that we take an exponential function of longitudinal g-force to calculate the size: size = b * e^(-a*x),
             // where "x" is the value of "gforce_longitudinal" field
@@ -71,21 +76,32 @@ internal class CellProperties : INotifyPropertyChanged
             // The weight is an inversed sigmoid function of proximity to this fixed longitudinal g-force: 1 / (1 + e^(-a*x))
             // where x is the difference between the current and the fixed longitudinal g-forces, and "a" controls the steepness of the transition.
 
+            /*
             var weight = 1.0 / (1.0 + Math.Exp(GForceToSize_CriticalLongitudinalForceSteepness * (GForceToSize_CriticalLongitudinalForce - gforceLongitudinal)));
 
-            var scale = Math.Exp(-GForceToSize_Scale * gforceLongitudinal) * weight        // component that depends on "gforce_longitudinal" field
+            var scale = Math.Exp(-GForceToSize_Scale * telemetryValueForSize) * weight        // component that depends on "gforce_longitudinal" field
                       + SizeAtCriticalBrakeForce * (1.0 - weight);                         // constant component
 
             Size += (DefaultSize * scale - Size) * MotionDamping_Longitudinal;
+            */
 
             // Another way to limit the circle size is simply to apply Math.Min function given that we have specified GForceToSize_MaxSize:
-            // var size = DefaultSize * Math.Exp(-GForceToSize_Scale * gforceLongitudinal);
-            // Size += (Math.Min(scale, GForceToSize_MaxSize) - Size) * MotionDamping_Longitudinal;
+
+            var size = _settings.CircleSize * Math.Exp(-_settings.BindSizeScale * telemetryValueForSize);
+            Size += (Math.Min(size, _settings.BindSizeMax) - Size) * _settings.BindSizeDamp;
         }
 
-        if (e.TryGetValue("gforce_lateral", out var gforceLateral))
+        if (e.TryGetValue(_settings.BindOffsetField, out var telemetryValueForOffset))
         {
-            OffsetX += (GForceToOffset_Scale * gforceLateral - OffsetX) * MotionDamping_Lateral;
+            OffsetX += (_settings.BindOffsetScale * telemetryValueForOffset - OffsetX) * _settings.BindOffsetDamp;
+        }
+    }
+
+    private void Settings_Updated(object? sender, string propName)
+    {
+        if (propName == nameof(Settings.CellColor))
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
         }
     }
 }
