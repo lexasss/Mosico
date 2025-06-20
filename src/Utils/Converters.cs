@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Mosico.Definitions;
+namespace Mosico.Utils;
 
 [ValueConversion(typeof(SolidColorBrush), typeof(Color))]
 public class BrushToColorConverter : IValueConverter

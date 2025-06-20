@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace Mosico.Definitions;
+namespace Mosico.Models;
 
 public class Settings
 {

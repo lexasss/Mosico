@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Mosico.Views"
-        xmlns:defs="clr-namespace:Mosico.Definitions"
+        xmlns:utils="clr-namespace:Mosico.Utils"
         xmlns:services="clr-namespace:Mosico.Services"
         mc:Ignorable="d"
         DataContext="{Binding Path=Settings, RelativeSource={RelativeSource Self}}"
@@ -18,7 +18,7 @@
         WindowStartupLocation="CenterScreen">
     
     <Window.Resources>
-        <defs:BrushToColorConverter x:Key="brush2color"/>
+        <utils:BrushToColorConverter x:Key="brush2color"/>
         
         <Style x:Key="Dialog" TargetType="Button">
             <Setter Property="Padding" Value="8"/>

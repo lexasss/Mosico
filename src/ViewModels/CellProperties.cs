@@ -1,5 +1,4 @@
-﻿using Mosico.Definitions;
-using Mosico.Services;
+﻿using Mosico.Services;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -61,7 +60,7 @@ internal class CellProperties : INotifyPropertyChanged
 
     //static double SizeAtCriticalBrakeForce = Math.Exp(-GForceToSize_Scale * GForceToSize_CriticalLongitudinalForce);
 
-    readonly Settings _settings = Settings.Instance;
+    readonly Models.Settings _settings = Models.Settings.Instance;
 
     private void OnTelemetryReceived(object? sender, Dictionary<string, float> e)
     {
@@ -99,7 +98,7 @@ internal class CellProperties : INotifyPropertyChanged
 
     private void Settings_Updated(object? sender, string propName)
     {
-        if (propName == nameof(Settings.CellColor))
+        if (propName == nameof(Models.Settings.CellColor))
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
         }

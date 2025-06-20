@@ -1,11 +1,10 @@
-﻿using Mosico.Definitions;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Mosico.Views;
 
 public partial class SettingsDialog : Window
 {
-    public Settings Settings { get; } = new Settings();
+    public Models.Settings Settings { get; } = new Models.Settings();
 
     public SettingsDialog()
     {

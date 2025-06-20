@@ -1,7 +1,4 @@
-﻿using Mosico.Definitions;
-using Mosico.ViewModels;
-using Mosico.Views;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -13,7 +10,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        _cellProperies = new CellProperties(_telemetryService);
+        _cellProperies = new ViewModels.CellProperties(_telemetryService);
 
         _settings.Updated += Settings_Updated;
     }
@@ -21,17 +18,17 @@ public partial class MainWindow : Window
     // Internal
 
     readonly Services.TelemetryService _telemetryService = new();
-    readonly CellProperties _cellProperies;
-    readonly Settings _settings = Settings.Instance;
+    readonly ViewModels.CellProperties _cellProperies;
+    readonly Models.Settings _settings = Models.Settings.Instance;
 
     private void CreateGrid()
     {
         ugdContainer.Children.Clear();
 
-        var sizeBinding = new Binding(nameof(CellProperties.Size)) { Source = _cellProperies };
-        var xOffsetBinding = new Binding(nameof(CellProperties.OffsetX)) { Source = _cellProperies };
-        var yOffsetBinding = new Binding(nameof(CellProperties.OffsetY)) { Source = _cellProperies };
-        var colorBinding = new Binding(nameof(CellProperties.Color)) { Source = _cellProperies };
+        var sizeBinding = new Binding(nameof(ViewModels.CellProperties.Size)) { Source = _cellProperies };
+        var xOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetX)) { Source = _cellProperies };
+        var yOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetY)) { Source = _cellProperies };
+        var colorBinding = new Binding(nameof(ViewModels.CellProperties.Color)) { Source = _cellProperies };
 
         int rows = (int)(ActualHeight / _settings.CellSize);
         int columns = (int)(ActualWidth / _settings.CellSize);
@@ -66,7 +63,7 @@ public partial class MainWindow : Window
 
     private void Settings_Updated(object? sender, string propName)
     {
-        if (propName == nameof(Settings.CellSize))
+        if (propName == nameof(Models.Settings.CellSize))
         {
             CreateGrid();
         }
@@ -91,7 +88,7 @@ public partial class MainWindow : Window
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new SettingsDialog();
+        var dialog = new Views.SettingsDialog();
         dialog.ShowDialog();
     }
 

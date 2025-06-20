@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Mosico;
+namespace Mosico.Utils;
 
 internal static class WinAPI
 {
