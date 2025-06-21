@@ -114,14 +114,14 @@ public class Settings
 
     private T Get<T>(string prop)
     {
-        if (_canSaveToStorage || !_cache.ContainsKey(prop))
+        if (_canSaveToStorage || !_cache.TryGetValue(prop, out object? value))
         {
             _cache[prop] = Properties.Settings.Default[prop];
-            return (T)Properties.Settings.Default[prop];
+            return (T)_cache[prop];
         }
         else
         {
-            return (T)_cache[prop];
+            return (T)value;
         }
     }
 
@@ -136,13 +136,9 @@ public class Settings
         }
         else
         {
-            if (_cache.ContainsKey(prop))
+            if (!_cache.TryAdd(prop, value))
             {
                 _cache[prop] = value;
-            }
-            else
-            {
-                _cache.Add(prop, value);
             }
         }
     }

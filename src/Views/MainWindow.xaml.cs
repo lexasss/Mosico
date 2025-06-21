@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Mosico;
+namespace Mosico.Views;
 
 public partial class MainWindow : Window
 {
@@ -47,14 +47,14 @@ public partial class MainWindow : Window
         {
             for (int j = 0; j < ugdContainer.Columns; j++)
             {
-                var cell = new Views.Cell
+                var cell = new Cell
                 {
                     RenderTransform = transformGroup
                 };
 
                 BindingOperations.SetBinding(cell, WidthProperty, sizeBinding);
                 BindingOperations.SetBinding(cell, HeightProperty, sizeBinding);
-                BindingOperations.SetBinding(cell, Views.Cell.ColorProperty, colorBinding);
+                BindingOperations.SetBinding(cell, Cell.ColorProperty, colorBinding);
 
                 ugdContainer.Children.Add(cell);
             }
@@ -88,7 +88,7 @@ public partial class MainWindow : Window
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new Views.SettingsDialog();
+        var dialog = new SettingsDialog();
         dialog.ShowDialog();
     }
 
