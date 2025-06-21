@@ -7,8 +7,12 @@
         xmlns:local="clr-namespace:Mosico.Views"
         xmlns:utils="clr-namespace:Mosico.Utils"
         xmlns:services="clr-namespace:Mosico.Services"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Style="{StaticResource MaterialDesignWindow}"
+        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
+        FontFamily="{md:MaterialDesignFont}"
         DataContext="{Binding Path=Settings, RelativeSource={RelativeSource Self}}"
         Title="Mosico settings"
         Height="550"
@@ -21,17 +25,21 @@
     <Window.Resources>
         <utils:BrushToColorConverter x:Key="brush2color"/>
 
-        <Style x:Key="Dialog" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Style x:Key="Dialog" TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
             <Setter Property="Padding" Value="8"/>
             <Setter Property="Margin" Value="8,4"/>
             <Setter Property="MinWidth" Value="74"/>
         </Style>
-        <Style x:Key="Section" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+        <Style x:Key="Section" TargetType="Label" BasedOn="{StaticResource MaterialDesignLabel}">
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="8,8,2,4"/>
+            <Setter Property="Margin" Value="0,8,0,4"/>
+            <Setter Property="Background" Value="#FFD2D2D2"/>
             <Setter Property="BorderThickness" Value="0,1,0,0"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="#FFA4A4A4"/>
+        </Style>
+        <Style TargetType="Label" BasedOn="{StaticResource MaterialDesignLabel}">
+            <Setter Property="Margin" Value="2"/>
         </Style>
         <Style TargetType="xctk:ColorPicker">
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -46,11 +54,10 @@
             <Setter Property="Height" Value="26"/>
             <Setter Property="Width" Value="48"/>
         </Style>
-        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-            <Setter Property="Height" Value="26"/>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignFilledComboBox}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="6"/>
             <Setter Property="Margin" Value="6,2"/>
-            <Setter Property="FontStyle" Value="Italic"/>
         </Style>
 
         <ObjectDataProvider x:Key="TelemetryFields" MethodName="get_FieldNames"
