@@ -18,19 +18,19 @@
       <Value Profile="(Default)">0.7</Value>
     </Setting>
     <Setting Name="BindSizeMax" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">150</Value>
     </Setting>
     <Setting Name="BindOffsetField" Type="System.String" Scope="User">
       <Value Profile="(Default)">gforce_lateral</Value>
     </Setting>
     <Setting Name="BindOffsetScale" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">50</Value>
+      <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="BindSizeDamp" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.1</Value>
+      <Value Profile="(Default)">0.2</Value>
     </Setting>
     <Setting Name="BindOffsetDamp" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.1</Value>
+      <Value Profile="(Default)">0.3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

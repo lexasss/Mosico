@@ -85,7 +85,7 @@ namespace Mosico.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("150")]
         public double BindSizeMax {
             get {
                 return ((double)(this["BindSizeMax"]));
@@ -109,7 +109,7 @@ namespace Mosico.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public double BindOffsetScale {
             get {
                 return ((double)(this["BindOffsetScale"]));
@@ -121,7 +121,7 @@ namespace Mosico.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
         public double BindSizeDamp {
             get {
                 return ((double)(this["BindSizeDamp"]));
@@ -133,7 +133,7 @@ namespace Mosico.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
         public double BindOffsetDamp {
             get {
                 return ((double)(this["BindOffsetDamp"]));
