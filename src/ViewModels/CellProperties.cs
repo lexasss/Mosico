@@ -58,36 +58,53 @@ internal class CellProperties : INotifyPropertyChanged
 
     // Internal
 
-    //static double SizeAtCriticalBrakeForce = Math.Exp(-GForceToSize_Scale * GForceToSize_CriticalLongitudinalForce);
-
     readonly Models.Settings _settings = Models.Settings.Instance;
 
     private void OnTelemetryReceived(object? sender, Dictionary<string, float> e)
     {
         if (e.TryGetValue(_settings.BindSizeField, out var telemetryValueForSize))
         {
-            // The idea is that we take an exponential function of longitudinal g-force to calculate the size: size = b * e^(-a*x),
-            // where "x" is the value of "gforce_longitudinal" field
-            // However, we want to limit it when desseleration is strong, so the cirlce size do not grow further after reaching some limit.
-            // We can do that by mixing two components:
-            //  one component is just normally calculate the exponential function of the current longitudinal g-force,
-            //  the other component is the same exponential function, but calculated at some fixed longitudinal g-force.
-            // The weight is an inversed sigmoid function of proximity to this fixed longitudinal g-force: 1 / (1 + e^(-a*x))
-            // where x is the difference between the current and the fixed longitudinal g-forces, and "a" controls the steepness of the transition.
+            // METHOD 1:
+            // The idea is that we take an exponential function of longitudinal g-force to calculate the size: size = a * e^(-b*x),
+            // where "x" is "telemetryValueForSize".
+            // However, we want to limit it when desseleration is strong, so the cirlce does not grow further after reaching some limit.
+            // We can do that by adding another component that is the same exponential function, but calculated at some fixed x: x = c.
+            // The weight is an inversed sigmoid function of proximity to this fixed longitudinal g-force: 1 / (1 + e^(-k*d))
+            // where d = c - x, i.e. the difference between the current and the fixed longitudinal g-forces,
+            // and "k" controls the steepness of the transition.
+            // See the Excel's sheet "size1and2" for details
 
             /*
-            var weight = 1.0 / (1.0 + Math.Exp(GForceToSize_CriticalLongitudinalForceSteepness * (GForceToSize_CriticalLongitudinalForce - gforceLongitudinal)));
+            var m = _settings.BindSizeMax;
+            var a = _settings.CircleSize;
+            var b = _settings.BindSizeScale;
+            var c = Math.Log(a / m) / b;
+            var k = 5;
+            var weight = 1.0 / (1.0 + Math.Exp(k * (c - telemetryValueForSize)));
 
-            var scale = Math.Exp(-GForceToSize_Scale * telemetryValueForSize) * weight        // component that depends on "gforce_longitudinal" field
-                      + SizeAtCriticalBrakeForce * (1.0 - weight);                         // constant component
+            var size = a * Math.Exp(-b * telemetryValueForSize) * weight        // component that depends on "gforce_longitudinal" field
+                     + a * Math.Exp(-b * c) * (1.0 - weight);                   // constant component
 
-            Size += (DefaultSize * scale - Size) * MotionDamping_Longitudinal;
+            Size += (size - Size) * _settings.BindSizeDamp;
             */
 
-            // Another way to limit the circle size is simply to apply Math.Min function given that we have specified GForceToSize_MaxSize:
+            /*
+            // METHOD 2:
+            // Same as METHOD 1: size = a * e^(-b*x), but size limiting is achieved with Math.Min
 
-            var size = _settings.CircleSize * Math.Exp(-_settings.BindSizeScale * telemetryValueForSize);
-            Size += (Math.Min(size, _settings.BindSizeMax) - Size) * _settings.BindSizeDamp;
+            var size = a * Math.Exp(-b * telemetryValueForSize);
+            Size += (Math.Min(size, m) - Size) * _settings.BindSizeDamp;
+            */
+
+            // METHOD 3:
+            var m = _settings.BindSizeMax;
+            var a = _settings.CircleSize;
+            var b = m / (m - 2 * a);            // well, "b" is the function inversed scale, but we can derive it from "m" and "a", therefore
+            var c = _settings.BindSizeScale;    // "BindSizeScale" is used for controlling the function steepness that is "c"
+            var x = Math.Exp(-c * telemetryValueForSize);
+            var size = a * b * 2 * x * x / (1 + b * x + (b - 1) * x * x);   // see the Excel's sheet "size3" for details
+            var minSize = 5;
+            Size += (Math.Max(size, minSize) - Size) * _settings.BindSizeDamp;
         }
 
         if (e.TryGetValue(_settings.BindOffsetField, out var telemetryValueForOffset))
