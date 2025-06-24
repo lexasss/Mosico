@@ -98,7 +98,7 @@ internal class TelemetryService : IDisposable
 
     // Internal
 
-    const int PORT = 20778; // 20778 - regular frequency, 20779 - reduced frequency
+    const int PORT = 20777; // 20777 - directly from CARLA, 20779 - via "\stream_telemetry.py" reduced frequency
 
     const int VALUE_SIZE = 4;           // bytes, size of float
     readonly static int VALUE_COUNT = FieldNames.Length;
