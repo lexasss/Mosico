@@ -92,6 +92,9 @@ internal class CellProperties : INotifyPropertyChanged
             // METHOD 2:
             // Same as METHOD 1: size = a * e^(-b*x), but size limiting is achieved with Math.Min
 
+            var m = _settings.BindSizeMax;
+            var a = _settings.CircleSize;
+            var b = _settings.BindSizeScale;
             var size = a * Math.Exp(-b * telemetryValueForSize);
             Size += (Math.Min(size, m) - Size) * _settings.BindSizeDamp;
             */
