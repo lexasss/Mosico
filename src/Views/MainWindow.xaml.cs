@@ -10,22 +10,23 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        _cellProperies = new ViewModels.CellProperties(_telemetryService);
+        _cellProperies = new ViewModels.CellProperties();
 
         _settings.Updated += Settings_Updated;
     }
 
     // Internal
 
-    readonly Services.TelemetryService _telemetryService = new();
     readonly ViewModels.CellProperties _cellProperies;
     readonly Models.Settings _settings = Models.Settings.Instance;
+
+    Services.UdpTelemetryService? _telemetryService;
 
     private void CreateGrid()
     {
         ugdContainer.Children.Clear();
 
-        var sizeBinding = new Binding(nameof(ViewModels.CellProperties.Size)) { Source = _cellProperies };
+        var sizeBinding = new Binding(nameof(ViewModels.CellProperties.CircleSize)) { Source = _cellProperies };
         var xOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetX)) { Source = _cellProperies };
         var yOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetY)) { Source = _cellProperies };
         var colorBinding = new Binding(nameof(ViewModels.CellProperties.Color)) { Source = _cellProperies };
@@ -61,11 +62,40 @@ public partial class MainWindow : Window
         }
     }
 
+    private void SetDataSource()
+    {
+        if (_telemetryService?.Source == _settings.DataSource)
+            return;
+
+        _telemetryService?.Dispose();
+        _telemetryService = null;
+
+        Services.TelemetryMapper? telemetryMapper = null;
+
+        switch (_settings.DataSource)
+        {
+            case DataSource.Carla:
+                _telemetryService = new Services.CarlaTelemetryService();
+                telemetryMapper = new Services.CarlaTelemetryMapper(_telemetryService);
+                break;
+            case DataSource.VatraIMU:
+                _telemetryService = new Services.ValtraImuTelemetryService();
+                telemetryMapper = new Services.ValtraImuTelemetryMapper(_telemetryService);
+                break;
+        }
+
+        _cellProperies.SetTelemetryMapper(telemetryMapper);
+    }
+
     private void Settings_Updated(object? sender, string propName)
     {
         if (propName == nameof(Models.Settings.CellSize))
         {
             CreateGrid();
+        }
+        else if (propName == nameof(Models.Settings.DataSource))
+        {
+            SetDataSource();
         }
     }
 
@@ -76,20 +106,29 @@ public partial class MainWindow : Window
         Services.WindowsServices.SetWindowTransparent(this);
     }
 
+    // UI
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         CreateGrid();
+        SetDataSource();
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
-        _telemetryService.Dispose();
+        _telemetryService?.Dispose();
     }
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
+        Hide();
+
         var dialog = new SettingsDialog();
         dialog.ShowDialog();
+
+        Show();
+
+        _telemetryService?.IsPaused = false;
     }
 
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -100,5 +139,27 @@ public partial class MainWindow : Window
     private void TrayPopup_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         trbNotifyIcon.CloseTrayPopup();
+    }
+
+    private void NotifyIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
+    {
+        _telemetryService?.IsPaused = true;
+
+        Task.Run(async () => {
+            while (true)
+            {
+                await Task.Delay(500);
+                bool isMenuVisible = false;
+                Dispatcher.Invoke(() => isMenuVisible = trbNotifyIcon.ContextMenu.IsVisible);
+
+                if (isMenuVisible)
+                    continue;
+                
+                if (IsVisible)
+                    _telemetryService?.IsPaused = false;
+
+                break;
+            }
+        });
     }
 }

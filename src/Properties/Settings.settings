@@ -8,29 +8,47 @@
     <Setting Name="CellSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">300</Value>
     </Setting>
-    <Setting Name="CircleSize" Type="System.Double" Scope="User">
+    <Setting Name="InitialCircleSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
-    <Setting Name="BindSizeField" Type="System.String" Scope="User">
+    <Setting Name="CarlaSizeBindingField" Type="System.String" Scope="User">
       <Value Profile="(Default)">gforce_longitudinal</Value>
     </Setting>
-    <Setting Name="BindSizeScale" Type="System.Double" Scope="User">
+    <Setting Name="CarlaSizeBindingScale" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.7</Value>
     </Setting>
-    <Setting Name="BindSizeMax" Type="System.Double" Scope="User">
+    <Setting Name="MaxCircleSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">150</Value>
     </Setting>
-    <Setting Name="BindOffsetField" Type="System.String" Scope="User">
+    <Setting Name="CarlaOffsetBindingField" Type="System.String" Scope="User">
       <Value Profile="(Default)">gforce_lateral</Value>
     </Setting>
-    <Setting Name="BindOffsetScale" Type="System.Double" Scope="User">
+    <Setting Name="CarlaOffsetBindingScale" Type="System.Double" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
-    <Setting Name="BindSizeDamp" Type="System.Double" Scope="User">
+    <Setting Name="SizeChangeDamping" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.2</Value>
     </Setting>
-    <Setting Name="BindOffsetDamp" Type="System.Double" Scope="User">
+    <Setting Name="OffsetChangeDamping" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.3</Value>
+    </Setting>
+    <Setting Name="ValtraImuSizeBindingField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AccBdyX</Value>
+    </Setting>
+    <Setting Name="ValtraImuSizeBindingScale" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="ValtraImuOffsetXBindingField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AccBdyY</Value>
+    </Setting>
+    <Setting Name="ValtraImuOffsetYBindingField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AccBdyZ</Value>
+    </Setting>
+    <Setting Name="ValtraImuOffsetBindingScale" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="DataSource" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

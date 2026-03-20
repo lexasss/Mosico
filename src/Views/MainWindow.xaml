@@ -35,7 +35,8 @@
                         ToolTipText="Mosico app"
                         IconSource="/Assets/Images/icon.png"
                         MenuActivation="LeftOrRightClick"
-                        PopupActivation="DoubleClick">
+                        PopupActivation="DoubleClick"
+                        TrayContextMenuOpen="NotifyIcon_TrayContextMenuOpen">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="_Settings..."

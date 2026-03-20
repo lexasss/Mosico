@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:local="clr-namespace:Mosico.Views"
+        xmlns:local="clr-namespace:Mosico"
         xmlns:utils="clr-namespace:Mosico.Utils"
         xmlns:services="clr-namespace:Mosico.Services"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Style="{StaticResource MaterialDesignWindow}"
@@ -15,10 +16,10 @@
         FontFamily="{md:MaterialDesignFont}"
         DataContext="{Binding Path=Settings, RelativeSource={RelativeSource Self}}"
         Title="Mosico settings"
-        Height="550"
-        Width="220"
+        Height="320"
+        Width="520"
+        MinHeight="320"
         ResizeMode="NoResize"
-        SizeToContent="Height"
         Icon="/Assets/Images/icon.png"
         WindowStartupLocation="CenterScreen">
     
@@ -34,7 +35,8 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,8,0,4"/>
-            <Setter Property="Background" Value="#FFD2D2D2"/>
+            <Setter Property="Background" Value="#FF2E4394"/>
+            <Setter Property="Foreground" Value="#FFFFFFFF"/>
             <Setter Property="BorderThickness" Value="0,1,0,0"/>
             <Setter Property="BorderBrush" Value="#FFA4A4A4"/>
         </Style>
@@ -53,6 +55,7 @@
             <Setter Property="Padding" Value="4,2"/>
             <Setter Property="Height" Value="26"/>
             <Setter Property="Width" Value="48"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignFilledComboBox}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -60,8 +63,17 @@
             <Setter Property="Margin" Value="6,2"/>
         </Style>
 
-        <ObjectDataProvider x:Key="TelemetryFields" MethodName="get_FieldNames"
-                            ObjectType="{x:Type services:TelemetryService}">
+        <ObjectDataProvider x:Key="CarlaTelemetryFields" MethodName="get_FieldNames"
+                            ObjectType="{x:Type services:CarlaTelemetryService}">
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ValtraImuTelemetryFields" MethodName="get_FieldNames"
+                            ObjectType="{x:Type services:ValtraImuTelemetryService}">
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="DataSources" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:DataSource"/>
+            </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
     
@@ -74,69 +86,159 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.ColumnSpan="2"
-                   Style="{StaticResource Section}"
-                   Content="General"/>
-            <Label Grid.Row="1" Grid.Column="0">Cell size, px</Label>
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     Text="{Binding CellSize, Mode=TwoWay}"/>
-            <Label Grid.Row="2" Grid.Column="0">Circle size, px</Label>
-            <TextBox Grid.Row="2" Grid.Column="1"
-                     Text="{Binding CircleSize, Mode=TwoWay}"/>
-            <Label Grid.Row="3" Grid.Column="0">Color</Label>
-            <xctk:ColorPicker Grid.Row="3" Grid.Column="1"
-                              SelectedColor="{Binding CellColor, Mode=TwoWay, Converter={StaticResource brush2color}}"/>
+            <TabControl Grid.Row="1"
+                        Margin="0,12,0,0">
+                <TabItem Header="General">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="4" Grid.ColumnSpan="2"
-                   Style="{StaticResource Section}"
-                   Content="Size binding"/>
-            <Label Grid.Row="5" Grid.Column="0">Telemetry field</Label>
-            <ComboBox Grid.Row="6" Grid.ColumnSpan="2"
-                      ItemsSource="{Binding Source={StaticResource TelemetryFields}}"
-                      SelectedItem="{Binding BindSizeField}"/>
-            <Label Grid.Row="7" Grid.Column="0">Scale</Label>
-            <TextBox Grid.Row="7" Grid.Column="1"
-                     Text="{Binding BindSizeScale, Mode=TwoWay}"/>
-            <Label Grid.Row="8" Grid.Column="0">Max size, px</Label>
-            <TextBox Grid.Row="8" Grid.Column="1"
-                     Text="{Binding BindSizeMax, Mode=TwoWay}"/>
-            <Label Grid.Row="9" Grid.Column="0">Damping rate</Label>
-            <TextBox Grid.Row="9" Grid.Column="1"
-                     Text="{Binding BindSizeDamp, Mode=TwoWay}"/>
+                        <StackPanel Grid.Column="0">
+                            <Label Style="{StaticResource Section}"
+                                   Content="Grid properties"/>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="10" Grid.ColumnSpan="2"
-                   Style="{StaticResource Section}"
-                   Content="Offset binding"/>
-            <Label Grid.Row="11" Grid.Column="0">Telemetry field</Label>
-            <ComboBox Grid.Row="12" Grid.ColumnSpan="2"
-                      ItemsSource="{Binding Source={StaticResource TelemetryFields}}"
-                      SelectedItem="{Binding BindOffsetField}"/>
-            <Label Grid.Row="13" Grid.Column="0">Scale</Label>
-            <TextBox Grid.Row="13" Grid.Column="1"
-                     Text="{Binding BindOffsetScale, Mode=TwoWay}"/>
-            <Label Grid.Row="14" Grid.Column="0">Damping rate</Label>
-            <TextBox Grid.Row="14" Grid.Column="1"
-                     Text="{Binding BindOffsetDamp, Mode=TwoWay}"/>
+                                <Label Grid.Row="0" Grid.Column="0">Cell size, px</Label>
+                                <TextBox Grid.Row="0" Grid.Column="1"
+                                    Text="{Binding CellSize, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Grid.Column="0">Initial circle size, px</Label>
+                                <TextBox Grid.Row="1" Grid.Column="1"
+                                    Text="{Binding InitialCircleSize, Mode=TwoWay}"/>
+                                <Label Grid.Row="2" Grid.Column="0">Max circle size, px</Label>
+                                <TextBox Grid.Row="2" Grid.Column="1"
+                                    Text="{Binding MaxCircleSize, Mode=TwoWay}"/>
+                                <Label Grid.Row="3" Grid.Column="0">Color</Label>
+                                <xctk:ColorPicker Grid.Row="3" Grid.Column="1"
+                                    SelectedColor="{Binding CellColor, Mode=TwoWay, Converter={StaticResource brush2color}}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <Label Style="{StaticResource Section}"
+                                   Content="Data mapping"/>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0">Data source</Label>
+                                <ComboBox Grid.Row="0" Grid.Column="1"
+                                    ItemsSource="{Binding Source={StaticResource DataSources}}"
+                                    SelectedItem="{Binding DataSource}"
+                                          MinWidth="120"/>
+                                <Label Grid.Row="1" Grid.Column="0">Size damping</Label>
+                                <TextBox Grid.Row="1" Grid.Column="1"
+                                    Text="{Binding SizeChangeDamping, Mode=TwoWay}"/>
+                                <Label Grid.Row="2" Grid.Column="0">Offset damping</Label>
+                                <TextBox Grid.Row="2" Grid.Column="1"
+                                    Text="{Binding OffsetChangeDamping, Mode=TwoWay}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem Header="Carla">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0">Size controller</Label>
+                        <ComboBox Grid.Row="0" Grid.Column="1"
+                            ItemsSource="{Binding Source={StaticResource CarlaTelemetryFields}}"
+                            SelectedItem="{Binding CarlaSizeBindingField}"
+                            MinWidth="180"/>
+                        <Label Grid.Row="1" Grid.Column="0"
+                            HorizontalContentAlignment="Right"
+                            Content="Size scale"/>
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                            Text="{Binding CarlaSizeBindingScale, Mode=TwoWay}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0">Offset controller</Label>
+                        <ComboBox Grid.Row="2" Grid.Column="1"
+                            ItemsSource="{Binding Source={StaticResource CarlaTelemetryFields}}"
+                            SelectedItem="{Binding CarlaOffsetBindingField}"
+                            MinWidth="180"/>
+                        <Label Grid.Row="3" Grid.Column="0"
+                               HorizontalContentAlignment="Right"
+                               Content="Offset scale"/>
+                        <TextBox Grid.Row="3" Grid.Column="1"
+                            Text="{Binding CarlaOffsetBindingScale, Mode=TwoWay}"/>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="ValtraIMU">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0">Size controller</Label>
+                        <ComboBox Grid.Row="0" Grid.Column="1"
+                            ItemsSource="{Binding Source={StaticResource ValtraImuTelemetryFields}}"
+                            SelectedItem="{Binding ValtraImuSizeBindingField}"
+                            MinWidth="180"/>
+                        <Label Grid.Row="1" Grid.Column="0"
+                            HorizontalContentAlignment="Right"
+                            Content="Size scale"/>
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                            Text="{Binding ValtraImuSizeBindingScale, Mode=TwoWay}"/>
+
+                        <Label Grid.Row="2" Grid.Column="0">Offset X controller</Label>
+                        <ComboBox Grid.Row="2" Grid.Column="1"
+                            ItemsSource="{Binding Source={StaticResource ValtraImuTelemetryFields}}"
+                            SelectedItem="{Binding ValtraImuOffsetXBindingField}"
+                            MinWidth="180"/>
+                        <Label Grid.Row="3" Grid.Column="0">Offset Y controller</Label>
+                        <ComboBox Grid.Row="3" Grid.Column="1"
+                            ItemsSource="{Binding Source={StaticResource ValtraImuTelemetryFields}}"
+                            SelectedItem="{Binding ValtraImuOffsetYBindingField}"
+                            MinWidth="180"/>
+                        <Label Grid.Row="4" Grid.Column="0"
+                               HorizontalContentAlignment="Right"
+                               Content="Offset scale"/>
+                        <TextBox Grid.Row="4" Grid.Column="1"
+                            Text="{Binding ValtraImuOffsetBindingScale, Mode=TwoWay}"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
         </Grid>
 
         <WrapPanel Grid.Row="1"

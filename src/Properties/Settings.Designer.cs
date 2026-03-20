@@ -50,96 +50,168 @@ namespace Mosico.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public double CircleSize {
+        public double InitialCircleSize {
             get {
-                return ((double)(this["CircleSize"]));
+                return ((double)(this["InitialCircleSize"]));
             }
             set {
-                this["CircleSize"] = value;
+                this["InitialCircleSize"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("gforce_longitudinal")]
-        public string BindSizeField {
+        public string CarlaSizeBindingField {
             get {
-                return ((string)(this["BindSizeField"]));
+                return ((string)(this["CarlaSizeBindingField"]));
             }
             set {
-                this["BindSizeField"] = value;
+                this["CarlaSizeBindingField"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.7")]
-        public double BindSizeScale {
+        public double CarlaSizeBindingScale {
             get {
-                return ((double)(this["BindSizeScale"]));
+                return ((double)(this["CarlaSizeBindingScale"]));
             }
             set {
-                this["BindSizeScale"] = value;
+                this["CarlaSizeBindingScale"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("150")]
-        public double BindSizeMax {
+        public double MaxCircleSize {
             get {
-                return ((double)(this["BindSizeMax"]));
+                return ((double)(this["MaxCircleSize"]));
             }
             set {
-                this["BindSizeMax"] = value;
+                this["MaxCircleSize"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("gforce_lateral")]
-        public string BindOffsetField {
+        public string CarlaOffsetBindingField {
             get {
-                return ((string)(this["BindOffsetField"]));
+                return ((string)(this["CarlaOffsetBindingField"]));
             }
             set {
-                this["BindOffsetField"] = value;
+                this["CarlaOffsetBindingField"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public double BindOffsetScale {
+        public double CarlaOffsetBindingScale {
             get {
-                return ((double)(this["BindOffsetScale"]));
+                return ((double)(this["CarlaOffsetBindingScale"]));
             }
             set {
-                this["BindOffsetScale"] = value;
+                this["CarlaOffsetBindingScale"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
-        public double BindSizeDamp {
+        public double SizeChangeDamping {
             get {
-                return ((double)(this["BindSizeDamp"]));
+                return ((double)(this["SizeChangeDamping"]));
             }
             set {
-                this["BindSizeDamp"] = value;
+                this["SizeChangeDamping"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
-        public double BindOffsetDamp {
+        public double OffsetChangeDamping {
             get {
-                return ((double)(this["BindOffsetDamp"]));
+                return ((double)(this["OffsetChangeDamping"]));
             }
             set {
-                this["BindOffsetDamp"] = value;
+                this["OffsetChangeDamping"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AccBdyX")]
+        public string ValtraImuSizeBindingField {
+            get {
+                return ((string)(this["ValtraImuSizeBindingField"]));
+            }
+            set {
+                this["ValtraImuSizeBindingField"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public double ValtraImuSizeBindingScale {
+            get {
+                return ((double)(this["ValtraImuSizeBindingScale"]));
+            }
+            set {
+                this["ValtraImuSizeBindingScale"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AccBdyY")]
+        public string ValtraImuOffsetXBindingField {
+            get {
+                return ((string)(this["ValtraImuOffsetXBindingField"]));
+            }
+            set {
+                this["ValtraImuOffsetXBindingField"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AccBdyZ")]
+        public string ValtraImuOffsetYBindingField {
+            get {
+                return ((string)(this["ValtraImuOffsetYBindingField"]));
+            }
+            set {
+                this["ValtraImuOffsetYBindingField"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public double ValtraImuOffsetBindingScale {
+            get {
+                return ((double)(this["ValtraImuOffsetBindingScale"]));
+            }
+            set {
+                this["ValtraImuOffsetBindingScale"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DataSource {
+            get {
+                return ((int)(this["DataSource"]));
+            }
+            set {
+                this["DataSource"] = value;
             }
         }
     }

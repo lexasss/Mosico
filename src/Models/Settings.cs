@@ -6,6 +6,12 @@ public class Settings
 {
     public static Settings Instance => _instance ??= new Settings(true);
 
+    public DataSource DataSource
+    {
+        get => (DataSource)Get<int>(nameof(DataSource));
+        set => Save(nameof(DataSource), (int)value);
+    }
+
     public SolidColorBrush CellColor
     {
         get => new(IntToColor(Get<uint>(nameof(CellColor))));
@@ -18,54 +24,91 @@ public class Settings
         set => Save(nameof(CellSize), value);
     }
 
-    public double CircleSize
+    public double InitialCircleSize
     {
-        get => Get<double>(nameof(CircleSize));
-        set => Save(nameof(CircleSize), value);
+        get => Get<double>(nameof(InitialCircleSize));
+        set => Save(nameof(InitialCircleSize), value);
     }
 
-    public string BindSizeField
+    public double MaxCircleSize
     {
-        get => Get<string>(nameof(BindSizeField));
-        set => Save(nameof(CircleSize), value);
+        get => Get<double>(nameof(MaxCircleSize));
+        set => Save(nameof(MaxCircleSize), value);
     }
 
-    public double BindSizeScale
+    public double SizeChangeDamping
     {
-        get => Get<double>(nameof(BindSizeScale));
-        set => Save(nameof(BindSizeScale), value);
+        get => Get<double>(nameof(SizeChangeDamping));
+        set => Save(nameof(SizeChangeDamping), value);
     }
 
-    public double BindSizeMax
+    public double OffsetChangeDamping
     {
-        get => Get<double>(nameof(BindSizeMax));
-        set => Save(nameof(BindSizeMax), value);
+        get => Get<double>(nameof(OffsetChangeDamping));
+        set => Save(nameof(OffsetChangeDamping), value);
     }
 
-    public double BindSizeDamp
+    #region Carla bindings
+
+    public string CarlaSizeBindingField
     {
-        get => Get<double>(nameof(BindSizeDamp));
-        set => Save(nameof(BindSizeDamp), value);
+        get => Get<string>(nameof(CarlaSizeBindingField));
+        set => Save(nameof(CarlaSizeBindingField), value);
     }
 
-    public string BindOffsetField
+    public double CarlaSizeBindingScale
     {
-        get => Get<string>(nameof(BindOffsetField));
-        set => Save(nameof(BindOffsetField), value);
+        get => Get<double>(nameof(CarlaSizeBindingScale));
+        set => Save(nameof(CarlaSizeBindingScale), value);
     }
 
-    public double BindOffsetScale
+    public string CarlaOffsetBindingField
     {
-        get => Get<double>(nameof(BindOffsetScale));
-        set => Save(nameof(BindOffsetScale), value);
+        get => Get<string>(nameof(CarlaOffsetBindingField));
+        set => Save(nameof(CarlaOffsetBindingField), value);
     }
 
-    public double BindOffsetDamp
+    public double CarlaOffsetBindingScale
     {
-        get => Get<double>(nameof(BindOffsetDamp));
-        set => Save(nameof(BindOffsetDamp), value);
+        get => Get<double>(nameof(CarlaOffsetBindingScale));
+        set => Save(nameof(CarlaOffsetBindingScale), value);
     }
 
+    #endregion
+
+    #region ValtraIMU bindings
+
+    public string ValtraImuSizeBindingField
+    {
+        get => Get<string>(nameof(ValtraImuSizeBindingField));
+        set => Save(nameof(ValtraImuSizeBindingField), value);
+    }
+
+    public double ValtraImuSizeBindingScale
+    {
+        get => Get<double>(nameof(ValtraImuSizeBindingScale));
+        set => Save(nameof(ValtraImuSizeBindingScale), value);
+    }
+
+    public string ValtraImuOffsetXBindingField
+    {
+        get => Get<string>(nameof(ValtraImuOffsetXBindingField));
+        set => Save(nameof(ValtraImuOffsetXBindingField), value);
+    }
+
+    public string ValtraImuOffsetYBindingField
+    {
+        get => Get<string>(nameof(ValtraImuOffsetYBindingField));
+        set => Save(nameof(ValtraImuOffsetYBindingField), value);
+    }
+
+    public double ValtraImuOffsetBindingScale
+    {
+        get => Get<double>(nameof(ValtraImuOffsetBindingScale));
+        set => Save(nameof(ValtraImuOffsetBindingScale), value);
+    }
+
+    #endregion
     public event EventHandler<string>? Updated;
 
     /// <summary>
@@ -116,8 +159,16 @@ public class Settings
     {
         if (_canSaveToStorage || !_cache.TryGetValue(prop, out object? value))
         {
-            _cache[prop] = Properties.Settings.Default[prop];
-            return (T)_cache[prop];
+            try
+            {
+                _cache[prop] = Properties.Settings.Default[prop];
+                return (T)_cache[prop];
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine($"Property '{prop}' does not exist");
+                return default!;
+            }
         }
         else
         {
