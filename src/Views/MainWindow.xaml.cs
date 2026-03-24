@@ -21,6 +21,7 @@ public partial class MainWindow : Window
     readonly Models.Settings _settings = Models.Settings.Instance;
 
     Services.UdpTelemetryService? _telemetryService;
+    SettingsDialog? _settingsDialog;
 
     private void CreateGrid()
     {
@@ -121,14 +122,22 @@ public partial class MainWindow : Window
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Hide();
+        if (_settingsDialog == null)
+        {
+            Hide();
 
-        var dialog = new SettingsDialog();
-        dialog.ShowDialog();
+            _settingsDialog = new SettingsDialog();
+            _settingsDialog.ShowDialog();
+            _settingsDialog = null;
 
-        Show();
+            Show();
 
-        _telemetryService?.IsPaused = false;
+            _telemetryService?.IsPaused = false;
+        }
+        else
+        {
+            _settingsDialog.Activate();
+        }
     }
 
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -143,6 +152,12 @@ public partial class MainWindow : Window
 
     private void NotifyIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
     {
+        /// Somewhat complex way to pause and resume telemetry streaming when a tray menu is opened.
+        /// Here, it pauses when the menu pops up. It then contantly checks whether the menu is still visible,
+        /// and resumes when the menu dissappears, but only if the window (actually, dots) are visible, 
+        /// i.e. the settings window is not visible. Otherwise the telemetry should resume after the 
+        /// setting window is closed (in <see cref="SettingsMenuItem_Click(object, RoutedEventArgs)"/>).
+
         _telemetryService?.IsPaused = true;
 
         Task.Run(async () => {
