@@ -6,15 +6,9 @@ namespace Mosico.ViewModels;
 
 internal class CellProperties : INotifyPropertyChanged
 {
-    public SolidColorBrush Color
-    {
-        get => _settings.CellColor;
-        set
-        {
-            _settings.CellColor = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
-        }
-    }
+    public Color Color => _settings.CellColor;
+
+    public double Transparency => _settings.CellTransparency;
 
     public double CircleSize
     {
@@ -100,6 +94,10 @@ internal class CellProperties : INotifyPropertyChanged
         if (propName == nameof(Models.Settings.CellColor))
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
+        }
+        else if (propName == nameof(Models.Settings.CellTransparency))
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Transparency)));
         }
         else if (propName == nameof(Models.Settings.InitialCircleSize))
         {

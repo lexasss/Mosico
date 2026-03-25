@@ -34,7 +34,22 @@ namespace Mosico.Properties {
                 this["CellColor"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double CellTransparency
+        {
+            get
+            {
+                return ((double)(this["CellTransparency"]));
+            }
+            set
+            {
+                this["CellTransparency"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("300")]
@@ -212,6 +227,54 @@ namespace Mosico.Properties {
             }
             set {
                 this["DataSource"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        public double ValtraImuFilteringSizeStrength {
+            get {
+                return ((double)(this["ValtraImuFilteringSizeStrength"]));
+            }
+            set {
+                this["ValtraImuFilteringSizeStrength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        public double ValtraImuFilteringOffsetStrength {
+            get {
+                return ((double)(this["ValtraImuFilteringOffsetStrength"]));
+            }
+            set {
+                this["ValtraImuFilteringOffsetStrength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ValtraImuFilteringSizeEnabled {
+            get {
+                return ((bool)(this["ValtraImuFilteringSizeEnabled"]));
+            }
+            set {
+                this["ValtraImuFilteringSizeEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ValtraImuFilteringOffsetEnabled {
+            get {
+                return ((bool)(this["ValtraImuFilteringOffsetEnabled"]));
+            }
+            set {
+                this["ValtraImuFilteringOffsetEnabled"] = value;
             }
         }
     }

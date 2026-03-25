@@ -31,6 +31,7 @@ public partial class MainWindow : Window
         var xOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetX)) { Source = _cellProperies };
         var yOffsetBinding = new Binding(nameof(ViewModels.CellProperties.OffsetY)) { Source = _cellProperies };
         var colorBinding = new Binding(nameof(ViewModels.CellProperties.Color)) { Source = _cellProperies };
+        var transparencyBinding = new Binding(nameof(ViewModels.CellProperties.Transparency)) { Source = _cellProperies };
 
         int rows = (int)(ActualHeight / _settings.CellSize);
         int columns = (int)(ActualWidth / _settings.CellSize);
@@ -57,6 +58,7 @@ public partial class MainWindow : Window
                 BindingOperations.SetBinding(cell, WidthProperty, sizeBinding);
                 BindingOperations.SetBinding(cell, HeightProperty, sizeBinding);
                 BindingOperations.SetBinding(cell, Cell.ColorProperty, colorBinding);
+                BindingOperations.SetBinding(cell, Cell.TransparencyProperty, transparencyBinding);
 
                 ugdContainer.Children.Add(cell);
             }

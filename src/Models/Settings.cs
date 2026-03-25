@@ -12,10 +12,16 @@ public class Settings
         set => Save(nameof(DataSource), (int)value);
     }
 
-    public SolidColorBrush CellColor
+    public Color CellColor
     {
-        get => new(IntToColor(Get<uint>(nameof(CellColor))));
-        set => Save(nameof(CellColor), ColorToInt(value.Color));
+        get => IntToColor(Get<uint>(nameof(CellColor)));
+        set => Save(nameof(CellColor), ColorToInt(value));
+    }
+
+    public double CellTransparency
+    {
+        get => Get<double>(nameof(CellTransparency));
+        set => Save(nameof(CellTransparency), value);
     }
 
     public double CellSize
@@ -108,6 +114,30 @@ public class Settings
         set => Save(nameof(ValtraImuOffsetBindingScale), value);
     }
 
+    public double ValtraImuFilteringSizeStrength
+    {
+        get => Get<double>(nameof(ValtraImuFilteringSizeStrength));
+        set => Save(nameof(ValtraImuFilteringSizeStrength), value);
+    }
+
+    public double ValtraImuFilteringOffsetStrength
+    {
+        get => Get<double>(nameof(ValtraImuFilteringOffsetStrength));
+        set => Save(nameof(ValtraImuFilteringOffsetStrength), value);
+    }
+
+    public bool ValtraImuFilteringSizeEnabled
+    {
+        get => Get<bool>(nameof(ValtraImuFilteringSizeEnabled));
+        set => Save(nameof(ValtraImuFilteringSizeEnabled), value);
+    }
+
+    public bool ValtraImuFilteringOffsetEnabled
+    {
+        get => Get<bool>(nameof(ValtraImuFilteringOffsetEnabled));
+        set => Save(nameof(ValtraImuFilteringOffsetEnabled), value);
+    }
+
     #endregion
     public event EventHandler<string>? Updated;
 
@@ -130,7 +160,7 @@ public class Settings
 
             storage.Save();
 
-            _instance.FireAllUpdates();
+            _instance.FireUpdates(_cache.Keys.ToArray());
         }
     }
 
@@ -138,7 +168,7 @@ public class Settings
 
     static Settings? _instance = null;
 
-    readonly Dictionary<string, object> _cache = [];
+    readonly Dictionary<string, object> _cache = [];    /// used only if <see cref="_canSaveToStorage"/> is `false`
 
     readonly bool _canSaveToStorage;
 
@@ -147,22 +177,21 @@ public class Settings
         _canSaveToStorage = canSaveToStorage;
     }
 
-    protected void FireAllUpdates()
+    protected void FireUpdates(string[] updatedProperties)
     {
-        foreach (var kv in _cache)
+        foreach (var propName in updatedProperties)
         {
-            Updated?.Invoke(this, kv.Key);
+            Updated?.Invoke(this, propName);
         }
     }
 
     private T Get<T>(string prop)
     {
-        if (_canSaveToStorage || !_cache.TryGetValue(prop, out object? value))
+        if (!_cache.TryGetValue(prop, out object? value))
         {
             try
             {
-                _cache[prop] = Properties.Settings.Default[prop];
-                return (T)_cache[prop];
+                return (T)Properties.Settings.Default[prop];
             }
             catch
             {
