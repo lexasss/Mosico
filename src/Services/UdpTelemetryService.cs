@@ -35,8 +35,6 @@ internal abstract class UdpTelemetryService : IDisposable
 
     // Internal
 
-    const int VALUE_SIZE = sizeof(float);           // bytes, size of float
-
     readonly UdpClient _udpClient = new();
     readonly CancellationTokenSource _cts = new();
 

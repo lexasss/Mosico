@@ -100,7 +100,7 @@ internal abstract class TelemetryMapper : IDisposable
 
     private void Settings_Updated(object? sender, string propName)
     {
-        if (propName == nameof(Models.Settings.CellSize))
+        if (propName == nameof(Models.Settings.InitialCircleSize))
         {
             _size = _settings.InitialCircleSize;
         }
