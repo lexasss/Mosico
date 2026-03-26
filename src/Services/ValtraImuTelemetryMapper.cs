@@ -10,40 +10,35 @@ internal class ValtraImuTelemetryMapper : TelemetryMapper
 
         _settings.Updated += Settings_Updated;
 
-        _sizeFilter = new(_settings.ValtraImuFilteringSizeStrength, TelemetrySampleInterval);
-        _offsetXFilter = new(_settings.ValtraImuFilteringOffsetStrength, TelemetrySampleInterval);
-        _offsetYFilter = new(_settings.ValtraImuFilteringOffsetStrength, TelemetrySampleInterval);
+        _sizeFilter = new(_settings.ValtraImuFilteringSizeStrength, TELEMETRY_SAMPLE_INTERVAL);
+        _offsetFilter = new(_settings.ValtraImuFilteringOffsetStrength, TELEMETRY_SAMPLE_INTERVAL);
     }
 
     // Internal
 
-    const double TelemetrySampleInterval = 4; // ms
+    const double TELEMETRY_SAMPLE_INTERVAL = 4; // ms
 
     LowPassFilter _sizeFilter;
-    LowPassFilter _offsetXFilter;
-    LowPassFilter _offsetYFilter;
+    LowPassFilter _offsetFilter;
 
-    private void OnTelemetryReceived(object? sender, Dictionary<string, float> e)
+    private void OnTelemetryReceived(object? sender, Dictionary<string, float> data)
     {
-        if (e.TryGetValue(_settings.ValtraImuSizeBindingField, out var telemetryValueForSize))
+        if (data.TryGetValue(_settings.ValtraImuSizeBindingField, out var size))
         {
             if (_settings.ValtraImuFilteringSizeEnabled)
-                telemetryValueForSize = _sizeFilter.Filter(telemetryValueForSize);
-            UpdateSize(telemetryValueForSize, _settings.ValtraImuSizeBindingScale);
+                size = _sizeFilter.Filter(size);
+
+            UpdateSize(size, _settings.ValtraImuSizeBindingScale);
         }
 
-        if (e.TryGetValue(_settings.ValtraImuOffsetXBindingField, out var telemetryValueForOffsetX))
+        if (data.TryGetValue(_settings.ValtraImuOffsetXBindingField, out var offsetX) &&
+            data.TryGetValue(_settings.ValtraImuOffsetYBindingField, out var offsetY))
         {
             if (_settings.ValtraImuFilteringOffsetEnabled)
-                telemetryValueForOffsetX = _offsetXFilter.Filter(telemetryValueForOffsetX);
-            UpdateOffsetX(telemetryValueForOffsetX, _settings.ValtraImuOffsetBindingScale);
-        }
+                (offsetX, offsetY) = _offsetFilter.Filter(offsetX, offsetY);
 
-        if (e.TryGetValue(_settings.ValtraImuOffsetYBindingField, out var telemetryValueForOffsetY))
-        {
-            if (_settings.ValtraImuFilteringOffsetEnabled)
-                telemetryValueForOffsetY = _offsetYFilter.Filter(telemetryValueForOffsetY);
-            UpdateOffsetY(telemetryValueForOffsetY, _settings.ValtraImuOffsetBindingScale);
+            UpdateOffsetX(offsetX, _settings.ValtraImuOffsetBindingScale);
+            UpdateOffsetY(offsetY, _settings.ValtraImuOffsetBindingScale);
         }
 
         FireDataUpdate();
@@ -53,12 +48,11 @@ internal class ValtraImuTelemetryMapper : TelemetryMapper
     {
         if (e == nameof(_settings.ValtraImuFilteringSizeStrength))
         {
-            _sizeFilter = new(_settings.ValtraImuFilteringSizeStrength, TelemetrySampleInterval);
+            _sizeFilter = new(_settings.ValtraImuFilteringSizeStrength, TELEMETRY_SAMPLE_INTERVAL);
         }
         else if (e == nameof(_settings.ValtraImuFilteringOffsetStrength))
         {
-            _offsetXFilter = new(_settings.ValtraImuFilteringOffsetStrength, TelemetrySampleInterval);
-            _offsetYFilter = new(_settings.ValtraImuFilteringOffsetStrength, TelemetrySampleInterval);
+            _offsetFilter = new(_settings.ValtraImuFilteringOffsetStrength, TELEMETRY_SAMPLE_INTERVAL);
         }
     }
 }

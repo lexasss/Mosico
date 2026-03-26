@@ -3,28 +3,25 @@
 internal class ValtraImuTelemetryService : UdpTelemetryService
 {
     public static string[] FieldNames => [
-        "Week",
         "Time",
-        "Latitude",     // m
-        "Longitude",    // m
-        "Elevation",    // m
-        "Easting",      // m
-        "Northing",     // m
+        "X (forward)",  // m
+        "Y (right)",    // m
+        "Z (upward)",   // m
         "Roll",         // deg
         "Pitch",        // deg
-        "Heading",      // deg
-        "VEast",        // m/s
-        "VNorth",       // m/s
-        "VUp",          // m/s
-        "AccEast",      // m/s^2
-        "AccNrth",      // m/s^2
-        "AccUp",        // m/s^2
-        "AccBdyX",      // m/s^2
-        "AccBdyY",      // m/s^2
-        "AccBdyZ",      // m/s^2
-        "AngRateX",     // deg/s
-        "AngRateY",     // deg/s
-        "AngRateZ",     // deg/s
+        "Yaw",          // deg
+        "Vel X",        // m/s
+        "Vel Y",        // m/s
+        "Vel Z",        // m/s
+        "Vel Roll",     // m/s^2
+        "Vel Pitch",    // m/s^2
+        "Vel Yaw",      // m/s^2
+        "Acc X",        // m/s^2
+        "Acc Y",        // m/s^2
+        "Acc Z",        // m/s^2
+        "Acc Roll",     // deg/s^2
+        "Acc Pitch",    // deg/s^2
+        "Acc Yaw",      // deg/s^2
     ];
 
     public override int Port => 38777;
