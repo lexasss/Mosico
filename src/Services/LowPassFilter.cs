@@ -61,7 +61,7 @@ internal class LowPassFilter
             return x;
         }
 
-        _x = (float)((_x + _alpha * x) / (1f + _alpha));
+        _x = (float)((x + _alpha * _x) / (1f + _alpha));
 
         return _x;
     }
